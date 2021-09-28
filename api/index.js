@@ -18,11 +18,26 @@
 //                       `=---='
 //     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const server = require('./src/app.js');
-const { conn } = require('./src/db.js');
-
+const { conn,Types } = require('./src/db.js');
+const axios=require('axios')
 // Syncing all the models at once.
 conn.sync({ force: true }).then(() => {
-  server.listen(3001, () => {
+   
+  server.listen(3001, async() => {
+    let types= await axios.get('https://pokeapi.co/api/v2/type')
+    let pokemonsTypes= types.data.results.map(el=>{
+      return {
+        nombre: el.name
+      }
+    })
+    //aca cargo los tipos a la base de datos
+    let create= pokemonsTypes.map(type=>{
+      Types.create(type)
+    })
+    Promise.all(create)
+      .then(res => {
+        console.log('types added') 
+      }) 
     console.log('%s listening at 3001'); // eslint-disable-line no-console
   });
 });
