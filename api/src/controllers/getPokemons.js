@@ -15,10 +15,16 @@ const axios = require("axios")
     
             const pokemones= response.map(el=>{
                return el ={
-                    name: el.data.name,
+                    nombre: el.data.name,
                     id: el.data.id,
-                    img:el.data.sprites.other.dream_world.front_default,
-                    types: el.data.types.map(el=>el.type.name)
+                    img:el.data.sprites.other.dream_world.front_default ? el.data.sprites.other.dream_world.front_default : "",
+                    types: el.data.types.map(el=>el.type.name) ? el.data.types.map(el=>el.type.name) : "",
+                    vida:el.data.stats[0].base_stat ? el.data.stats[0].base_stat : "",
+                    fuerza:el.data.stats[1].base_stat ? el.data.stats[1].base_stat : "",
+                    defensa:el.data.stats[2].base_stat ? el.data.stats[2].base_stat : "",
+                    velocidad:el.data.stats[5].base_stat ? el.data.stats[5].base_stat : "",
+                    altura:el.data.height ? el.data.height : "",
+                    peso:el.data.weight ? el.data.weight : ""
                 }
             })
             
@@ -33,7 +39,7 @@ const axios = require("axios")
      let getPokemonBd= async()=>{
         try{
             return await Pokemon.findAll({
-                attributes:['name','id',],
+                attributes:['nombre','id','vida','fuerza','defensa','velocidad','altura','peso'],
                 include:{
                  model:Types
                 }
@@ -47,10 +53,9 @@ const axios = require("axios")
     //uno pokems de api con BD 
     let getAllPokemons = async()=>{
         try{
-            const[api,bd]= await Promise.all([getPokemonApi(),getPokemonBd()])
+            let[api,bd]= await Promise.all([getPokemonApi(),getPokemonBd()])
            let json=bd.map(el=>{ return el.toJSON()})
-           const infoTotal= [...api,...json];
-           console.log(infoTotal)
+           let infoTotal= [...api,...json];
             return infoTotal;
         }
         catch(e){ 
@@ -59,6 +64,7 @@ const axios = require("axios")
         }
     }
 
+    
     module.exports={
         getPokemonApi,
         getPokemonApi,

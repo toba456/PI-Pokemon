@@ -3,9 +3,8 @@ const { Router } = require('express');
 // Ejemplo: const authRouter = require('./auth.js');
 
 const router = Router();
-
 const pokemons= require('./pokemons')
-
+const types = require('./types')
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);
 
@@ -14,6 +13,7 @@ const pokemons= require('./pokemons')
 
 
 router.use("/pokemons",pokemons);
+router.use("/types",types);
 
 
 
