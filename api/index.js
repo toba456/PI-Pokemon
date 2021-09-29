@@ -21,7 +21,7 @@ const server = require('./src/app.js');
 const { conn,Types } = require('./src/db.js');
 const axios=require('axios')
 // Syncing all the models at once.
-conn.sync({ force: true }).then(() => {
+conn.sync({ force: false }).then(() => {
    
   server.listen(3001, async() => {
     let types= await axios.get('https://pokeapi.co/api/v2/type')
