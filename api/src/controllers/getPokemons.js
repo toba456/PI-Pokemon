@@ -9,10 +9,8 @@ const axios = require("axios")
         for (let i = 1; i <= 40; i++) {
             info.push( await axios.get('https://pokeapi.co/api/v2/pokemon/' + i));
         }
-        
         return Promise.all(info)
         .then(response=>{
-    
             const pokemones= response.map(el=>{
                return el ={
                     nombre: el.data.name,
@@ -30,7 +28,7 @@ const axios = require("axios")
             
             return pokemones;
         })
-        .catch(e=> console.log("Error en la request a la Api: " + e))
+        .catch(e=> console.log("Error en la request a la Api: " + e));
        
       
     }
@@ -46,21 +44,28 @@ const axios = require("axios")
             })
         }
         catch(e){
-            console.log("ERROR en getPokemonBd" + e)
-            return e;
+            console.log("ERROR en getPokemonBd: " + e);
         }
     }
     //uno pokems de api con BD 
-    let getAllPokemons = async()=>{
+    let getAllPokemons = async(nombre)=>{
         try{
-            let[api,bd]= await Promise.all([getPokemonApi(),getPokemonBd()])
-           let json=bd.map(el=>{ return el.toJSON()})
+           let[api,bd]= await Promise.all([getPokemonApi(),getPokemonBd()]);
+           let json=bd.map(el=>{ return el.toJSON()});
            let infoTotal= [...api,...json];
-            return infoTotal;
+           //si recibo un nombre por query entra en el if y filtro ese nombre sino devuelvo todos los Pokemons
+           if(nombre){
+            let pokemonName= infoTotal.filter(el=>{
+                return el.nombre.toLowerCase().includes(nombre.toLowerCase());
+            })
+            return pokemonName; 
+           }
+           else{
+                return infoTotal;  
+           }
         }
         catch(e){ 
-            console.log("ERROR en getPokemons" + e )
-            return e
+            console.log("ERROR en getPokemons: " + e );
         }
     }
 

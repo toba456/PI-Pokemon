@@ -3,17 +3,21 @@ const { Router } = require('express');
 const router = Router();
 const {Types}= require('../db.js')
 
+
 router.get("/",async(req,res)=>{
-    let types= await Types.findAll({
-        attributes:{
-            exclude:['createdAt',"updatedAt"]
-        }
-    })
+    
     try{
-        res.status(200).json(types);
+        let types= await Types.findAll({
+            attributes:{
+                exclude:['createdAt',"updatedAt"]
+            }
+        })
+        types ?
+        res.status(200).json(types):
+        res.status(400).send("Types no encontrados");
     }
     catch(e){
-        res.status(400).send(e);
+        console.log("Error en get /types: " + e)
     }
 })
 

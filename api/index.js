@@ -37,7 +37,8 @@ conn.sync({ force: true }).then(() => {
     Promise.all(create)
       .then(res => {
         console.log('types added') 
-      }) 
+      })
+      .catch(e=> console.log("ERROR!"+e))
     console.log('%s listening at 3001'); // eslint-disable-line no-console
   });
 });
