@@ -10,7 +10,7 @@ const axios = require("axios")
             info.push( await axios.get('https://pokeapi.co/api/v2/pokemon/' + i));
         }
         return Promise.all(info)
-        .then(response=>{
+        .then(response=>{ 
             const pokemones= response.map(el=>{
                return el ={
                     nombre: el.data.name,
@@ -36,12 +36,30 @@ const axios = require("axios")
     
      let getPokemonBd= async()=>{
         try{
-            return await Pokemon.findAll({
+            let pokemonBd= await Pokemon.findAll({
                 attributes:['nombre','id','vida','fuerza','defensa','velocidad','altura','peso'],
                 include:{
                  model:Types
                 }
             })
+            console.log(pokemonBd)
+            pokemonBd=pokemonBd.map(el=> 
+                el={
+                    nombre:el.nombre,
+                    id: el.id,
+                    img: el.img,
+                    vida: el.hp,
+                    fuerza: el.fuerza,
+                    defensa: el.defensa,
+                    velocidad: el.velocidad,
+                    types: el.types.map((t) => t.nombre),
+                    peso: el.peso,
+                    altura: el.altura
+
+                }
+            )
+            
+            return pokemonBd;
         }
         catch(e){
             console.log("ERROR en getPokemonBd: " + e);
@@ -51,8 +69,8 @@ const axios = require("axios")
     let getAllPokemons = async(nombre)=>{
         try{
            let[api,bd]= await Promise.all([getPokemonApi(),getPokemonBd()]);
-           let json=bd.map(el=>{ return el.toJSON()});
-           let infoTotal= [...api,...json];
+        //    let json=bd.map(el=>{ return el.toJSON()});
+           let infoTotal= [...bd,...api];
            //si recibo un nombre por query entra en el if y filtro ese nombre sino devuelvo todos los Pokemons
            if(nombre){
             let pokemonName= infoTotal.filter(el=>{

@@ -25,6 +25,7 @@ conn.sync({ force: true }).then(() => {
    
   server.listen(3001, async() => {
     let types= await axios.get('https://pokeapi.co/api/v2/type')
+    
     let pokemonsTypes= types.data.results.map(el=>{
       return {
         nombre: el.name

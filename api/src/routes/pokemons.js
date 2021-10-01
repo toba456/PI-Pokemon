@@ -8,6 +8,7 @@ router.get("/",async(req,res)=>{
     
         const {nombre}=req.query;
         const allPokemons= await getAllPokemons(nombre);
+        
     try{
         !allPokemons.length ?                   // si no tiene nada es porque no encontro el nombre x query
         res.status(404).send(nombre + " no existe") :
@@ -53,6 +54,7 @@ router.post("/",async(req,res)=>{
                 peso,   
         })
          createdPokemon.addTypes(types)
+         console.log(createdPokemon)
          createdPokemon ?
          res.status(200).send( nombre + " creado con exito"):
          res.status(400).send("No se pudo crear pokemon")
