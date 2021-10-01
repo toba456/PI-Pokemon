@@ -12,3 +12,21 @@ export function GetPokemons(){
     }
 }
 
+export function GetTypes(){
+    return async function(dispatch){
+        let types= await axios.get("http://localhost:3001/types");
+        let action={
+            type: "GET_TYPES",
+            payload: types.data
+        }
+        return dispatch(action);
+    }
+}
+
+
+export function GetPokemonsByType(payload){
+    return{
+        type: "GET_BY_TYPE",
+        payload
+    }
+}
